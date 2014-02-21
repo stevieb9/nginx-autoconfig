@@ -1,0 +1,42 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+use Getopt::Long;
+use File::Copy;
+
+my $config;
+my $allow_ips;
+
+my $args = GetOptions (
+    "config|c=s"    => \$config,
+    "allow|a=s"     => \$allow_ips,     
+);
+
+open my $nginx_conf, '<', $config
+  or die "Can't open the nginx config file, $config: $!";
+
+open my $new_conf, '+>', "$config.new"
+  or die "Can't open the new config file, $config.new for writing: $!";
+
+my @allow_array = split( /\s+/, $allow_ips );
+
+while ( my $config_line = <$nginx_conf> ){
+
+    next if $config_line =~ /allow \d+\.\d+/;
+
+    if ( $config_line =~ /deny all;/ ){
+
+        my $deny_line = $config_line;
+
+        for my $ip_block ( @allow_array ){
+            print $new_conf "        allow $ip_block;\n";
+        }
+
+    }
+        print $new_conf $config_line;
+}
+
+copy( $new_conf, $nginx_conf );
+
