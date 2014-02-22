@@ -31,7 +31,6 @@ while ( my $config_line = <$nginx_conf> ){
         for my $ip_block ( @allow_array ){
             print $new_conf "        allow $ip_block;\n";
         }
-
     }
         print $new_conf $config_line;
 }
