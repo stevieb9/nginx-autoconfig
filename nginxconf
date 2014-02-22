@@ -28,8 +28,6 @@ while ( my $config_line = <$nginx_conf> ){
 
     if ( $config_line =~ /deny all;/ ){
 
-        my $deny_line = $config_line;
-
         for my $ip_block ( @allow_array ){
             print $new_conf "        allow $ip_block;\n";
         }
