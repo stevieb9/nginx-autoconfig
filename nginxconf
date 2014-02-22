@@ -32,7 +32,8 @@ while ( my $config_line = <$nginx_conf> ){
             print $new_conf "        allow $ip_block;\n";
         }
     }
-        print $new_conf $config_line;
+
+    print $new_conf $config_line;
 }
 
 close( $new_conf );
